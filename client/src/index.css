@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+:root {
+  /* COLORS */
+  --BGCOLOR: #0F172A;
+  --BORDER-COLOR: #FFF;
+  --COLOR: #FFF;
+  --ERROR: firebrick;
+  --INACTIVE: lightgray;
+  --LINK-COLOR: whitesmoke;
+  --LINK-HOVER: rgba(245, 245, 245, 0.9);
+  --NOTE-BGCOLOR: hsla(240, 64%, 27%, 0.65);
+  --STATUS-COMPLETE: limegreen;
+  --STATUS-OPEN: firebrick;
+  --TABLE-BGCOLOR: #FFF;
+  --TABLE-COLOR: #000;
+  --INPUT-INVALID: #F00;
+}
+
+.errmsg {
+  display: inline-block;
+  background-color: var(--TABLE-BGCOLOR);
+  color: var(--ERROR);
+  padding: 0.25em;
+  margin-bottom: 0.5em;
+}
+
+.errmsg a:any-link {
+  color: var(--ERROR);
+  text-decoration: underline;
+}
+
+
+/* App.css */
+/* Signup.css */
+
+.parent{
+  display: flex;
+  justify-content: center;
+}
+.app {
+  /* text-align: center; */
+
+  /* width: fit-content; */
+  /* padding: 0 20px 0 20px; */
+}
+
+.page {
+  /* background-color: #fff; */
+  /* padding: 20px; */
+  /* border-radius: 8px; */
+  margin-top: 7rem;
+  /* border: 1px solid red; */
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.5s ease-in-out;
+  width: 100%;
+  padding: 20px 20px 20px 20px;
+  /* width: 30rem; */
+}
+
+/* .transition {
+  animation: fadeIn 0.5s ease-in-out;
+} */
+
+label {
+  display: block;
+  margin-bottom: 0.7rem;
+  font-size: 1.1rem;
+}
+
+label input{
+  margin-left: 0.6rem;
+  /* animation: fadeIn 0.9s ease-in-out; */
+
+}
+
+.heading{
+  color: #008000;
+  margin-bottom: 2rem;
+  font-size: 2.125rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+button {
+  background-color: #ffD700;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: 20px;
+  margin-right: 1rem;
+  /* text-align: center; */
+}
+
+button:hover {
+  background-color: #ffe44e;
+}
+.thanks{
+  margin-top: 1rem;
+  font-size: 1.3rem;
+}
+@media screen and (min-width: 426px) {
+  .page{
+    width: 30rem;
+  }
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
