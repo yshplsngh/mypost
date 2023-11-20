@@ -19,3 +19,6 @@
 08112023	01:43:73	79d841a7-3003-4353-859e-7fb393dea76f	TypeError:allowedOrigins.indexOf is not a function	/auth	OPTIONS	http://localhost:3001
 08112023	01:44:29	97deec5d-e163-4754-ba34-f40d01891b0c	Too Many Requests: Too many login attempts from this IP, please try again after a 60 second pause	POST	/	http://localhost:3001
 08112023	01:44:33	1b56a6a8-6f5b-4a2c-8922-20322e6f72f1	Too Many Requests: Too many login attempts from this IP, please try again after a 60 second pause	POST	/	http://localhost:3001
+21112023	01:09:15	93538bdf-6322-42d4-ae8f-09dd99523343	ValidationError:User validation failed: panUrl: Path `panUrl` is required., aadharUrl: Path `aadharUrl` is required.	/auth/signup	POST	http://localhost:3000
+21112023	01:11:75	83d1e767-81d4-4336-adab-4bc35051f6c5	ValidationError:User validation failed: panUrl: Path `panUrl` is required., aadharUrl: Path `aadharUrl` is required.	/auth/signup	POST	http://localhost:3000
+21112023	01:13:17	6bfedddc-ce9d-46ea-8008-fd79d1eb6d0a	ValidationError:User validation failed: panUrl: Path `panUrl` is required., aadharUrl: Path `aadharUrl` is required.	/auth/signup	POST	http://localhost:3000

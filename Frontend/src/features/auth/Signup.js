@@ -79,6 +79,7 @@ const Signup = () => {
         e.preventDefault()
         try {
             await signup({ name, password, email, phoneNumber, city, address, postalCost }).unwrap()
+            console.log('done')
         } catch (err) {
             console.log(err)
             if (!err.status) {

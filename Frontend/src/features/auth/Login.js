@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux'
 import { setCredentials } from './authSlice'
 import { useLoginMutation } from './authApiSlice';
 import PulseLoader from 'react-spinners/PulseLoader'
+import usePersist from '../../hooks/usePersist';
 
 export default function Login() {
   const userRef = useRef()
@@ -17,6 +18,7 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errMsg, setErrMsg] = useState('')
+
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -79,7 +81,9 @@ export default function Login() {
     e.preventDefault()
     try {
       const { accessToken } = await login({ email, password }).unwrap()
+      console.log(accessToken)
       dispatch(setCredentials({ accessToken }))
+      localStorage.setItem("persist",true)
     } catch (err) {
       console.log(err)
       if (!err.status) {

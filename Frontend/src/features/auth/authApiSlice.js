@@ -53,6 +53,24 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             })
         }),
+        generateSignature:builder.mutation({
+            query:initialUserData => ({
+                url:'/auth/generateSignature',
+                method:'POST',
+                body:{
+                    ...initialUserData
+                }
+            })
+        }),
+        uploadDocumentUrl:builder.mutation({
+            query:documentsUrl => ({
+                url:'/auth/uploadDocumentUrl',
+                method:'POST',
+                body:{
+                    ...documentsUrl
+                }
+            })
+        }),
     })
 })
 
@@ -60,5 +78,7 @@ export const {
     useLoginMutation,
     useSendLogoutMutation,
     useRefreshMutation,
-    useSignupMutation
+    useSignupMutation,
+    useGenerateSignatureMutation,
+    useUploadDocumentUrlMutation,
 } = authApiSlice

@@ -1,6 +1,9 @@
 // Import necessary libraries
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGenerateSignatureMutation,useUploadDocumentUrlMutation } from './authApiSlice';
+import axios from 'axios';
+import PulseLoader from 'react-spinners/PulseLoader';
 
 // Main App component
 function VerfyDoc() {
@@ -8,6 +11,9 @@ function VerfyDoc() {
     const navigate = useNavigate()
     const [selectedOption, setSelectedOption] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [aadhar, setAadhar] = useState(null);
+    const [pan, setPan] = useState(null);
+    // const [loading,setLoading] = useState(false);
 
     // Function to handle next button click
     const handleNextClick = () => {
@@ -16,13 +22,81 @@ function VerfyDoc() {
         }
     };
 
+
+    const [generateSignature] = useGenerateSignatureMutation()
+    const [uploadDocumentUrl] = useUploadDocumentUrlMutation()
+
+    const handleGenerateSignature = async (folder)=>{
+        try {
+            const res = await generateSignature({folder}).unwrap()
+            // console.log(res)
+            return res
+        } catch (error) {
+            console.log(error)        
+        }
+    }
+
+
+    const uploadFile = async(folder,timestamp,signature,filename)=>{
+        const data = new FormData()
+        data.append("file",filename)
+        data.append("timestamp",timestamp)
+        data.append("signature",signature)
+        data.append("api_key",process.env.REACT_APP_CLOUDINARY_API_KEY)
+        data.append("folder",folder)
+        // console.log(data)
+        try {
+            let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME
+            // console.log(cloudName)
+
+
+            let resourceType = 'image'
+            let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+
+            const res = await axios.post(api,data);
+            // console.log(res);
+            return res;
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     // Function to handle "Done" button click
-    const handleDoneClick = () => {
-        // Handle any additional logic for "Done" button click if needed
-        // For example, you might want to perform some action or reset state
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            // generate timestamp for aadhar
+            // setLoading(true);
+            const {timestamp:aadharTimestamp,signature:aadharSignature} = await handleGenerateSignature('pdf')
+            const {timestamp:panTimestamp,signature:panSignature} = await handleGenerateSignature('pdf')
+            // console.log(aadharSignature+" "+aadharTimestamp)
+            // console.log(panSignature+" "+panTimestamp)
+
+            const aadharUrl = await uploadFile('pdf',aadharTimestamp,aadharSignature,aadhar)
+            const panUrl = await uploadFile('pdf',panTimestamp,panSignature,pan)
+
+
+            if(aadharUrl.status!==200 || panUrl.status!==200){
+                console.log("err h bhjai")
+            }
+
+            // console.log(aadharUrl.data.secure_url)
+            // console.log(panUrl.data.secure_url)
+            const aurl = aadharUrl.data.secure_url;
+            const purl = panUrl.data.secure_url;
+            console.log(aurl);
+            console.log(purl)
+            const res = await uploadDocumentUrl({aurl,purl});
+
+            // setLoading(false)
+
+        } catch (error) {
+            console.log(error);
+        }
     };
 
-    return (
+    const content = (
         <div className='parent'>
             {/* Page 1 */}
             {currentPage === 1 && (
@@ -55,7 +129,7 @@ function VerfyDoc() {
                 </div>
             )}
 
-            {/* Page 2 - Content based on checkbox selection */}
+            {/* Page 2 - manual verfication page */}
             {currentPage === 2 && (
                 <div className="page transition">
                     <h2 className='heading'>Manual Verfication</h2>
@@ -67,26 +141,41 @@ function VerfyDoc() {
                 </div>
             )}
 
-            {/* Page 3 - Content based on checkbox selection */}
+            {/* Page 3 - government id verfication page*/}
             {currentPage === 3 && (
                 <div className="page transition">
-                    <h2 className='heading'>Govenment Id proof</h2>
-                    <label htmlFor="">
-                        upload aadhar card:
-                        <input type="file" />
+                    <form onSubmit={handleSubmit}>
+                        <h2 className='heading'>Govenment Id proof</h2>
+                        <label htmlFor="aadhar">
+                            upload aadhar card:
+                            <input
+                                type="file"
+                                id="aadhar"
+                                accept="application/pdf"
+                                onChange={(e) => setAadhar((prev) => e.target.files[0])}
+                            />
 
-                    </label>
-                    <label htmlFor="">
-                        upload aadhar card:
-                        <input type="file" />
+                        </label>
+                        <label htmlFor="pan">
+                            upload PAN card:
+                            <input
+                                type="file"
+                                id='pan'
+                                accept="application/pdf"
+                                onChange={(e) => setPan((prev) => e.target.files[0])}
+                            />
 
-                    </label>
-                    {/* <p>Wait for a few hours.</p> */}
-                    <button onClick={handleDoneClick}>Done</button>
+                        </label>
+                        <button type='submit'>Done</button>
+                    </form>
                 </div>
             )}
         </div>
-    );
+    )
+
+    // if (loading) return <PulseLoader color={"#122738"} />
+
+    return content
 }
 
 export default VerfyDoc;

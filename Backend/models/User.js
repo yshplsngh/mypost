@@ -34,7 +34,26 @@ const userScheme = new mongoose.Schema({
         type:String,
         required:true,
         trim: true
-    }    
+    },
+    panUrl:{
+        type:String,
+        // required:true,
+        default:""
+    },  
+    aadharUrl:{
+        type:String,
+        // required:true,
+        default:""
+    },
+    verification:{
+        type:String,
+        required:true,
+        default:"N"
+    },
+    roles:{
+        type:[String],
+        default:["People"]
+    }
 })
 
 module.exports = mongoose.model('User',userScheme)

@@ -6,7 +6,7 @@ const baseQuery = fetchBaseQuery({
     credentials: 'include',
     prepareHeaders: (headers, { getState }) => {
         const token = getState().auth.token
-        // console.log(token);
+        // console.log(token)
         if (token) {
             headers.set("authorization", `Bearer ${token}`)
         }
@@ -20,10 +20,13 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
     // console.log(extraOptions) //custom like {shout: true}
     let result = await baseQuery(args, api, extraOptions)
     console.log(result)
+
     if (result?.error?.status === 403) {
         console.log('sending refresh token')
+
         const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
         console.log(refreshResult);
+
         if (refreshResult?.data) {
             api.dispatch(setCredentials({ ...refreshResult.data }))
             result = await baseQuery(args, api, extraOptions)
@@ -35,6 +38,12 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
             return refreshResult
         }
     }
+    // if (result?.error?.status === 401) {
+        // const navigate = useNavigate();
+        // Use the 'navigate' function to redirect to the '/login' page
+        // navigate('/login');
+        // return result; // You can choose to return the result or not, depending on your use case
+    // }
     
     // console.log(result)
     return result
