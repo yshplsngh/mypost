@@ -10,3 +10,4 @@
 15112023	00:27:97	d5f0b89e-28c6-4a4d-9b18-89554459d112	undefined:ECONNREFUSED	querySrv	_mongodb._tcp.medcluster.ljy6lwq.mongodb.net
 15112023	00:27:61	736fdc7d-da85-4234-be40-4927d71a645c	undefined:ECONNREFUSED	querySrv	_mongodb._tcp.medcluster.ljy6lwq.mongodb.net
 17112023	12:25:71	f30128d0-6436-4a5f-b1f2-47779c935dd5	undefined:ECONNREFUSED	querySrv	_mongodb._tcp.medcluster.ljy6lwq.mongodb.net
+19112023	18:13:77	aeaf97e9-f28a-474b-a627-574785a91d5c	undefined:ETIMEOUT	querySrv	_mongodb._tcp.medcluster.ljy6lwq.mongodb.net

@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const userScheme = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim:true
     },
     password: {
         type: String,
@@ -11,23 +12,28 @@ const userScheme = new mongoose.Schema({
     },
     email:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     },
     phoneNumber:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     },
     city:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     },
     address:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     },
     postalCost:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     }    
 })
 
