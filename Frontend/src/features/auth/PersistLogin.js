@@ -26,7 +26,7 @@ const PersistLogin = () => {
   useEffect(() => {
 
     // incompelte
-    if (effectRan.current === true || true) { // React 18 Strict Mode
+    if (effectRan.current === true || false) { // React 18 Strict Mode
 
       const verifyRefreshToken = async () => {
         console.log('verifying refresh token in persist login')
@@ -63,6 +63,7 @@ const PersistLogin = () => {
     console.log('error')
     content = (
       <p className='errmsg'>
+        {/* here i will make a component or page instaed of this message */}
         {`${error?.data?.message} - `}
         <Link to="/login">Please login again</Link>.
       </p>

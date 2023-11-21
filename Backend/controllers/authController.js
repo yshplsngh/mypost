@@ -53,17 +53,16 @@ const login = async (req, res) => {
 }
 
 
+
 // @desc signup
 // @route POST /auth/signup
 // @access public
-
 const signup = async (req, res) => {
     const { name, password, email, phoneNumber, city, address, postalCost } = req.body;
 
     if (!name || !password || !email || !phoneNumber || !city || !address || !postalCost) {
         return res.status(400).json({ message: "all field are required" })
     }
-
 
     const foundEmail = await User.findOne({ email }).lean().exec();
     if (foundEmail) {
@@ -75,15 +74,12 @@ const signup = async (req, res) => {
         return res.status(409).json({ message: 'duplicate phone number' })
     }
 
-
-
     //Hash password
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const userObject = { name, email, password: hashedPassword, phoneNumber, city, address, postalCost }
 
     const user = await User.create(userObject)
-
 
     if (user) {
         res.status(201).json({ message: `${user.name} created with ${user.email}` })
@@ -92,13 +88,16 @@ const signup = async (req, res) => {
     }
 }
 
+
+
 // @desc Refresh
 // @route GET /auth/refresh
 // @access Public - because access token has expired
 const refresh = async (req, res) => {
     const cookies = req.cookies
 
-    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized \\ refresh jwt not found' })
+    if (!cookies?.jwt) return res.status(401).json({ message: 'Unauthorized \\ refresh jwt not found in refresh back' })
+    // surely user delete jwt from cookies
 
     const refreshToken = cookies.jwt
 
@@ -106,11 +105,12 @@ const refresh = async (req, res) => {
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         async (err, decoded) => {
-            if (err) return res.status(403).json({ message: 'Forbidden' })
+            if (err) return res.status(403).json({ message: 'Forbidden // your login has expired' })
 
             const foundUser = await User.findOne({ email: decoded.email }).exec()
 
             if (!foundUser) return res.status(401).json({ message: 'Unauthorized' })
+            // user must change user from jwt
 
             const accessToken = jwt.sign(
                 {
@@ -128,6 +128,8 @@ const refresh = async (req, res) => {
     )
 }
 
+
+
 // @desc Logout
 // @route POST /auth/logout
 // @access Public - just to clear cookie if exists
@@ -137,6 +139,7 @@ const logout = async (req, res) => {
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true })
     res.json({ message: 'Cookie cleared' })
 }
+
 
 
 // @desc generateSignature
@@ -161,14 +164,35 @@ const generateSignature = (req, res) => {
     res.status(200).json({ timestamp, signature });
 }
 
+
+
 // @desc uploadDocumentUrl
 // @route PUT /auth/uploadDocumentUrl
 // @access public
 const uploadDocumentUrl = async (req, res) => {
-    console.log(req);
     const {aurl,purl} = req.body;
-    res.status(200).json({message:"jojo"})
+    const email = req.email
+    // console.log(email)
+    if(!aurl || !purl){
+        return res.status(400).json({ message: 'document Url not found' })
+    }
+    if(!email){
+        return res.status(403).json({message:"email not found in web token"})
+    }
+    const foundUser = await User.findOne({email}).exec()
+    
+    if (!foundUser) return res.status(401).json({ message: 'Unauthorized' })
+
+    foundUser.panUrl = purl
+    foundUser.aadharUrl = aurl
+    foundUser.verification = "I"
+
+    await foundUser.save()
+
+    res.status(200).json({message:"document upload successfully"})
 }
+
+
 
 module.exports = {
     login,

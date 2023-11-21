@@ -1,63 +1,95 @@
 // Import necessary libraries
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useGenerateSignatureMutation,useUploadDocumentUrlMutation } from './authApiSlice';
+import { useGenerateSignatureMutation, useUploadDocumentUrlMutation } from './authApiSlice';
 import axios from 'axios';
 import PulseLoader from 'react-spinners/PulseLoader';
 
-// Main App component
 function VerfyDoc() {
-    // State to manage checkbox states and page transitions
+    const errRef = useRef()
     const navigate = useNavigate()
     const [selectedOption, setSelectedOption] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [aadhar, setAadhar] = useState(null);
     const [pan, setPan] = useState(null);
-    // const [loading,setLoading] = useState(false);
+    const [errMsg, setErrMsg] = useState('')
+    const [loading, setLoading] = useState(false);
 
+    const [generateSignature, { isLoading: generateLoading, isSuccess: generateSuccess }] = useGenerateSignatureMutation()
+    const [uploadDocumentUrl, { isLoading: uploadLoading, isSuccess: uploadSuccess }] = useUploadDocumentUrlMutation()
     // Function to handle next button click
+    const errClass = errMsg ? "errmsg" : "offscreen"
+
+
     const handleNextClick = () => {
+        console.log('click')
         if (currentPage === 1 && selectedOption !== null) {
             setCurrentPage(selectedOption === 'option1' ? 2 : 3)
+        } else {
+            setErrMsg('Select at least one option')
         }
+        console.log(errMsg)
     };
 
+    useEffect(() => {
+        setErrMsg('')
+    }, [pan, aadhar,currentPage])
 
-    const [generateSignature] = useGenerateSignatureMutation()
-    const [uploadDocumentUrl] = useUploadDocumentUrlMutation()
 
-    const handleGenerateSignature = async (folder)=>{
+    useEffect(() => {
+        if (generateSuccess && uploadSuccess) {
+            setPan(null)
+            setAadhar(null)
+            navigate('/people')
+            console.log("redirect to people page from verfiy")
+        }
+    }, [generateSuccess, uploadSuccess, navigate])
+
+
+    const handleGenerateSignature = async (folder) => {
         try {
-            const res = await generateSignature({folder}).unwrap()
+            const res = await generateSignature({ folder }).unwrap()
             // console.log(res)
             return res
         } catch (error) {
-            console.log(error)        
+            console.log(error)
+            if (!error.status) {
+                setErrMsg('No server Response');
+            }
+            else {
+                setErrMsg(error?.data?.message)
+            }
+            errRef.current.focus()
         }
     }
 
 
-    const uploadFile = async(folder,timestamp,signature,filename)=>{
+
+    const uploadFile = async (folder, timestamp, signature, filename) => {
         const data = new FormData()
-        data.append("file",filename)
-        data.append("timestamp",timestamp)
-        data.append("signature",signature)
-        data.append("api_key",process.env.REACT_APP_CLOUDINARY_API_KEY)
-        data.append("folder",folder)
+        data.append("file", filename)
+        data.append("timestamp", timestamp)
+        data.append("signature", signature)
+        data.append("api_key", process.env.REACT_APP_CLOUDINARY_API_KEY)
+        data.append("folder", folder)
         // console.log(data)
         try {
             let cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME
-            // console.log(cloudName)
-
 
             let resourceType = 'image'
             let api = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
 
-            const res = await axios.post(api,data);
-            // console.log(res);
+            const res = await axios.post(api, data);
+            // console.log(res)
             return res;
         } catch (error) {
-            console.log(error);
+            // console.log(error.message);,
+            console.log(error)
+            setLoading(false)
+            if (error?.response?.status === 400) {
+                setErrMsg(error?.message)
+            }
+            errRef.current.focus()
         }
 
     }
@@ -66,33 +98,47 @@ function VerfyDoc() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
+            if (pan === null || aadhar === null) {
+                setErrMsg('All field required')
+                return
+            }
             // generate timestamp for aadhar
             // setLoading(true);
-            const {timestamp:aadharTimestamp,signature:aadharSignature} = await handleGenerateSignature('pdf')
-            const {timestamp:panTimestamp,signature:panSignature} = await handleGenerateSignature('pdf')
+            const { timestamp: aadharTimestamp, signature: aadharSignature } = await handleGenerateSignature('pdf')
+            const { timestamp: panTimestamp, signature: panSignature } = await handleGenerateSignature('pdf')
             // console.log(aadharSignature+" "+aadharTimestamp)
             // console.log(panSignature+" "+panTimestamp)
-
-            const aadharUrl = await uploadFile('pdf',aadharTimestamp,aadharSignature,aadhar)
-            const panUrl = await uploadFile('pdf',panTimestamp,panSignature,pan)
+            setLoading(true)
 
 
-            if(aadharUrl.status!==200 || panUrl.status!==200){
-                console.log("err h bhjai")
-            }
+            const aadharUrl = await uploadFile('pdf', aadharTimestamp, aadharSignature, aadhar)
+            const panUrl = await uploadFile('pdf', panTimestamp, panSignature, pan)
+
+            // if(aadharUrl.status!==200 || panUrl.status!==200){
+            //     console.log("err h bhjai")
+            // }
 
             // console.log(aadharUrl.data.secure_url)
             // console.log(panUrl.data.secure_url)
             const aurl = aadharUrl.data.secure_url;
             const purl = panUrl.data.secure_url;
-            console.log(aurl);
+            console.log(aurl)
             console.log(purl)
-            const res = await uploadDocumentUrl({aurl,purl});
+            setLoading(false)
+
+            await uploadDocumentUrl({ aurl, purl });
 
             // setLoading(false)
 
         } catch (error) {
-            console.log(error);
+            console.log(error)
+            if (!error.status) {
+                setErrMsg('No server Response');
+            }
+            else {
+                setErrMsg(error?.data?.message)
+            }
+            errRef.current.focus()
         }
     };
 
@@ -101,6 +147,7 @@ function VerfyDoc() {
             {/* Page 1 */}
             {currentPage === 1 && (
                 <div className="page">
+                    <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
                     <h2 className='heading'>Verification</h2>
                     <label htmlFor="manual">
                         Manual(postman)
@@ -137,6 +184,7 @@ function VerfyDoc() {
                     <p>we will notify you. when its done</p>
 
                     <p className='thanks'>Thank you!</p>
+                    <button onClick={() => setCurrentPage(1)}>Back</button>
                     <button onClick={() => navigate('/people')}>Done</button>
                 </div>
             )}
@@ -144,6 +192,7 @@ function VerfyDoc() {
             {/* Page 3 - government id verfication page*/}
             {currentPage === 3 && (
                 <div className="page transition">
+                    <p ref={errRef} className={errClass} aria-live="assertive">{errMsg}</p>
                     <form onSubmit={handleSubmit}>
                         <h2 className='heading'>Govenment Id proof</h2>
                         <label htmlFor="aadhar">
@@ -166,6 +215,7 @@ function VerfyDoc() {
                             />
 
                         </label>
+                        <button onClick={() => setCurrentPage(1)}>Back</button>
                         <button type='submit'>Done</button>
                     </form>
                 </div>
@@ -173,7 +223,11 @@ function VerfyDoc() {
         </div>
     )
 
-    // if (loading) return <PulseLoader color={"#122738"} />
+    if (uploadLoading || generateLoading) return <PulseLoader color={"#122738"} />
+
+    if (loading) {
+        return <p>loadins..</p>
+    }
 
     return content
 }

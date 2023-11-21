@@ -8,6 +8,7 @@ const verifyJWT = (req, res, next) => {
 
     if (!authHeader?.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Unauthorized // token not found in header' })
+        // surely user try to remove token from redux state
     }
 
     const token = authHeader.split(' ')[1]
@@ -17,7 +18,7 @@ const verifyJWT = (req, res, next) => {
         process.env.ACCESS_TOKEN_SECRET,
         (err, decoded) => {
             if (err) return res.status(403).json({ message: 'Forbidden \\ token expired' })
-            req.user = decoded.UserInfo.email
+            req.email = decoded.UserInfo.email
             req.roles = decoded.UserInfo.roles
             // console.log(decoded.UserInfo.email)
             next()

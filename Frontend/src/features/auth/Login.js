@@ -43,7 +43,7 @@ export default function Login() {
       setEmail('')
       setPassword('')
       navigate('/people')
-      console.log("redirect to people page")
+      console.log("redirect to people page from login")
     }
   }, [isSuccess, navigate])
 
