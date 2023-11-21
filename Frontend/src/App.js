@@ -6,9 +6,10 @@ import Public from './components/Public'
 import PeopleLayout from './components/PeopleLayout'
 import Welcome from './pages/Welcome'
 import VerifyDoc from './features/auth/VerifyDoc'
-import PersistLogin from './features/auth/PersistLogin'
+// import PersistLogin from './features/auth/PersistLogin'
 import { ROLES } from './config/roles'
 import RequireAuth from './features/auth/RequireAuth'
+
 
 function App() {
   return (
@@ -20,18 +21,16 @@ function App() {
         <Route path='/signup' element={<Signup />} />
 
         {/* Protected Routes */}
-        <Route element={<PersistLogin />}>
-          <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
+        <Route element={<RequireAuth allowedRoles={[...Object.values(ROLES)]} />}>
 
-            <Route path='/verify' element={<VerifyDoc />} />
-            
-            <Route path='people' element={<PeopleLayout />}>
-              <Route index element={<Welcome />} />
+          <Route path='/verify' element={<VerifyDoc />} />
+          <Route path='people' element={<PeopleLayout />}>
+            <Route index element={<Welcome />} />
 
-              {/* here i will write code for admin portal */}
-            </Route>
+            {/* here i will write code for admin portal */}
           </Route>
-        </Route> {/* End Protected Routes */}
+        </Route>
+        {/* </Route> End Protected Routes */}
 
 
       </Route>
