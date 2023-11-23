@@ -1112,3 +1112,12 @@
 22112023	01:29:97	c10d960e-53b4-4ffb-8c1c-e99497012ef5	POST	/auth	http://localhost:3000
 22112023	01:30:02	b420db83-cec0-4dc4-922a-21bcb4f070c5	OPTIONS	/auth	http://localhost:3000
 22112023	01:30:02	a00fd8de-62c1-443b-ab2f-b972c4abdddc	POST	/auth	http://localhost:3000
+22112023	21:22:39	c7134913-91ea-4b42-a71c-8b5320359ec1	OPTIONS	/auth/signup	http://localhost:3000
+22112023	21:22:40	685ede0f-ad11-41d2-b8b7-bf1541e32538	POST	/auth/signup	http://localhost:3000
+22112023	21:22:71	7161c724-429f-4c00-8542-30f5fe30a855	OPTIONS	/auth	http://localhost:3000
+22112023	21:22:72	c4100f4f-ba33-49db-8c52-dd67457e40e8	POST	/auth	http://localhost:3000
+22112023	21:25:78	06d51276-02dd-42c4-8633-b008e0b79f20	OPTIONS	/auth/generateSignature	http://localhost:3000
+22112023	21:25:79	dbeded25-cd8d-4cff-8527-aa65aeb014f3	POST	/auth/generateSignature	http://localhost:3000
+22112023	21:25:81	4c530847-a84f-45f8-8a2b-771f664ba6b3	POST	/auth/generateSignature	http://localhost:3000
+22112023	21:26:31	3c422bf6-2d5f-47e6-9108-dfacb91409fb	OPTIONS	/auth/uploadDocumentUrl	http://localhost:3000
+22112023	21:26:32	bc7f3782-ea4f-49b0-9c8a-4a30ba9841bf	POST	/auth/uploadDocumentUrl	http://localhost:3000
