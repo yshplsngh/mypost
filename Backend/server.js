@@ -41,6 +41,10 @@ mongoose.connection.once('open',()=>{
 
 //--handle mongodb error
 mongoose.connection.on('error',err=>{
-    logEvents(`${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`,'mongoErrLog.log')
+    if(err.code === undefined && err.reason.type === "ReplicaSetNoPrimary"){
+        logEvents(`${err.reason.type}\t\t${"GLA Error!"}`,'mongoErrLog.log')
+    }else{
+        logEvents(`${err.no}:${err.code}\t${err.syscall}\t${err.hostname}`,'mongoErrLog.log')
+    }
     console.log(err)
 })
