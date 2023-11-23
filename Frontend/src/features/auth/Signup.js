@@ -1,10 +1,10 @@
 import React from "react";
 import { useState, useEffect } from "react";
-// import { FcGoogle } from 'react-icons/fc';
+import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from "react-router-dom";
 import { useSignupMutation } from "./authApiSlice";
-// import { signInWithPopup } from 'firebase/auth';
-// import { auth, provider } from "../Config/firebase";
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from "../../config/firebase";
 
 
 
@@ -36,7 +36,7 @@ const Signup = () => {
     const [phoneNumber, setPhoneNumber] = useState('')
     const [errMsg, setErrMsg] = useState('')
     // const [password, setPassword] = useState("");
-    //   const [userDisplayName, setUserDisplayName] = useState(""); // State for user's display name
+      const [userDisplayName, setUserDisplayName] = useState(""); // State for user's display name
     const navigate = useNavigate();
 
     const [signup, { isLoading, isSuccess,}] = useSignupMutation()
@@ -93,26 +93,26 @@ const Signup = () => {
 
 
 
-    // const googleButtonStyle = {
-    //     backgroundColor: '#D3D3D3', // Dark Green
-    //     color: '#000', // Black text
-    //     padding: '10px 0',
-    // };
+    const googleButtonStyle = {
+        backgroundColor: '#D3D3D3', // Dark Green
+        color: '#000', // Black text
+        padding: '10px 0',
+    };
 
-    //   const signInWithGoogle = async () => {
-    //     try {
-    //       const result = await signInWithPopup(auth, provider);
-    //       if (result.user) {
-    //         const displayName = result.user.displayName;
-    //         setUserDisplayName(displayName || 'User');
-    //         navigate('/verify');
-    //       }
-    //     } catch (error) {
-    //       console.error('Google sign-in error:', error);
-    //     }
-    //   };
+      const signInWithGoogle = async () => {
+        try {
+          const result = await signInWithPopup(auth, provider);
+          if (result.user) {
+            const displayName = result.user.displayName;
+            setUserDisplayName(displayName || 'User');
+            navigate('/verify_location');
+          }
+        } catch (error) {
+          console.error('Google sign-in error:', error);
+        }
+      };
 
-    // const [value, setValue] = useState('');
+    const [value, setValue] = useState('');
 
     if (isLoading) return <PulseLoader color={"#122738"} />
 
@@ -309,7 +309,7 @@ const Signup = () => {
                                         sx={{ margin: '20px 0', backgroundColor: "rgba(189, 195, 199)" }}
                                     />
                                 </form>
-                                {/* <Button
+                                <Button
                   type="submit"
                   variant="contained"
                   style={googleButtonStyle}
@@ -319,7 +319,7 @@ const Signup = () => {
                 >
                   <FcGoogle style={{ fontSize: '30px', marginRight: '10px' }} />
                   Continue with Google
-                </Button> */}
+                </Button>
                             </Paper>
                         </Grid>
                     </Grid>

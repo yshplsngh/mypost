@@ -14,4 +14,5 @@
 19112023	18:13:77	aeaf97e9-f28a-474b-a627-574785a91d5c	undefined:ETIMEOUT	querySrv	_mongodb._tcp.medcluster.ljy6lwq.mongodb.net
 20112023	10:33:90	3022a5c7-36e8-4872-a37d-b582d6d19596	undefined:undefined	undefined	undefined
 23112023	13:43:26	eec6f857-53f0-4a1f-baca-418cfd795dd8	undefined:undefined	undefined	undefined
-
+23112023	13:57:59	d682da1b-f2c8-423a-a4b3-5f5471bac6c7	ReplicaSetNoPrimary		GLA Error!
+23112023	21:00:98	88713448-159d-4808-99b3-42a606eb1ec8	ReplicaSetNoPrimary		GLA Error!
