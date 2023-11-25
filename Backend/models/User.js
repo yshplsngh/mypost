@@ -16,7 +16,7 @@ const userScheme = new mongoose.Schema({
         trim: true
     },
     phoneNumber:{
-        type:String,
+        type:Number,
         required:true,
         trim: true
     },
@@ -31,7 +31,7 @@ const userScheme = new mongoose.Schema({
         trim: true
     },
     postalCost:{
-        type:String,
+        type:Number,
         required:true,
         trim: true
     },
