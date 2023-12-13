@@ -1,2 +1,2 @@
-# nityamneeds
+# mypost
 connecting nearby people
